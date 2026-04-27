@@ -1,0 +1,41 @@
+slack:
+  webhook_url: "https://hooks.slack.com/services/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"
+
+nginx:
+  log_path: "/var/log/nginx/hng-access.log"
+
+detection:
+  # Sliding window size in seconds
+  window_seconds: 60
+  # Z-score threshold for anomaly
+  zscore_threshold: 3.0
+  # Rate multiplier threshold (5x baseline mean)
+  rate_multiplier: 5.0
+  # Error rate multiplier to tighten thresholds
+  error_rate_multiplier: 3.0
+
+baseline:
+  # Rolling window in minutes
+  window_minutes: 30
+  # Recalculate every N seconds
+  recalc_interval: 60
+  # Minimum requests per second floor to avoid false positives at low traffic
+  min_rps_floor: 1.0
+  # Minimum samples before baseline is considered valid
+  min_samples: 10
+
+blocking:
+  # Ban durations in seconds (backoff schedule)
+  ban_durations:
+    - 600    # 10 minutes
+    - 1800   # 30 minutes
+    - 7200   # 2 hours
+    - -1     # permanent (-1 means no auto-unban)
+
+dashboard:
+  host: "0.0.0.0"
+  port: 8080
+  refresh_interval: 3
+
+audit:
+  log_path: "/var/log/detector/audit.log"
