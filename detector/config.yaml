@@ -1,5 +1,5 @@
 slack:
-  webhook_url: "https://hooks.slack.com/services/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"
+  webhook_url: "${SLACK_WEBHOOK_URL}"
 
 nginx:
   log_path: "/var/log/nginx/hng-access.log"
