@@ -330,4 +330,4 @@ monitor.py --> baseline.py (rolling 30min window)
 
 ## Blog Post
 
-_Link will be added here once published._
+Read the full write-up: [Building a Real-Time DDoS Detection Engine from Scratch — HNG DevOps Stage 3](https://dev.to/gideonbature/building-a-real-time-ddos-detection-engine-from-scratch-hng-devops-stage-3-2k5i)
