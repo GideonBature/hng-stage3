@@ -1,6 +1,11 @@
 FROM python:3.11-alpine
 
-RUN apk add --no-cache iptables
+RUN apk add --no-cache \
+    iptables \
+    gcc \
+    musl-dev \
+    python3-dev \
+    linux-headers
 
 WORKDIR /app
 

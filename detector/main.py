@@ -15,6 +15,8 @@ import time
 import signal
 import logging
 import sys
+import os
+import re
 import yaml
 
 from monitor import LogMonitor, LogEntry
@@ -38,7 +40,15 @@ logger = logging.getLogger("main")
 
 def load_config(path: str = "config.yaml") -> dict:
     with open(path, "r") as f:
-        return yaml.safe_load(f)
+        config_str = f.read()
+    
+    # Replace environment variable placeholders like ${VAR_NAME}
+    def replace_env_var(match):
+        var_name = match.group(1)
+        return os.getenv(var_name, match.group(0))
+    
+    config_str = re.sub(r'\$\{([^}]+)\}', replace_env_var, config_str)
+    return yaml.safe_load(config_str)
 
 
 def main():
