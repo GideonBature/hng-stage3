@@ -184,9 +184,22 @@ nano .env
 Fill in your values:
 
 ```env
+# Slack incoming webhook URL
 SLACK_WEBHOOK_URL=https://hooks.slack.com/services/YOUR/WEBHOOK/URL
+
+# Public IP of this VPS (used as a Nextcloud trusted domain)
 SERVER_IP=your.server.ip.address
+
+# Public domain that points to this server and serves the detector dashboard
+DASHBOARD_DOMAIN=your.dashboard.domain
+
+# Docker bridge gateway IP that nginx uses to reach the detector on the host network.
+# Find it with: docker network inspect <network> | grep Gateway
+DOCKER_GATEWAY_IP=172.17.0.1
 ```
+
+> **Note:** `.env` is git-ignored. Never commit real secrets. If a webhook URL is
+> ever exposed publicly, revoke it in Slack and create a new one.
 
 ### Step 5: Configure the detector
 
@@ -194,12 +207,18 @@ SERVER_IP=your.server.ip.address
 nano detector/config.yaml
 ```
 
-Update the slack webhook URL if not using environment variable substitution:
+The Slack webhook is read from the `SLACK_WEBHOOK_URL` environment variable via
+the placeholder in `config.yaml`, so you do not normally need to edit this file:
 
 ```yaml
 slack:
   webhook_url: "${SLACK_WEBHOOK_URL}"
 ```
+
+The nginx config is generated at container startup from
+`nginx/nginx.conf.template` using `envsubst`, substituting `${DASHBOARD_DOMAIN}`
+and `${DOCKER_GATEWAY_IP}` from your `.env` file. You should not need to edit
+`nginx.conf.template` unless you are changing the routing itself.
 
 ### Step 6: Bring the stack up
 
@@ -266,7 +285,7 @@ detector/
   requirements.txt # Python dependencies
   Dockerfile       # Container definition
 nginx/
-  nginx.conf       # JSON access log format, reverse proxy config
+  nginx.conf.template  # Template rendered at startup via envsubst
 docs/
   architecture.png
 screenshots/
